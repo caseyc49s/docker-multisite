@@ -1,0 +1,32 @@
+version: '3.1'
+services:
+
+  wordpress:
+    build: .
+    image: wordpress-multisite
+    environment:
+      WORDPRESS_TABLE_PREFIX: wp_
+      WORDPRESS_DB_PASSWORD: mysecurepwd
+      WORDPRESS_DEBUG: 'true'
+      
+    ports:
+      - '80:80'
+    volumes:
+      - wordpress:/var/www/html
+      - ./themes:/var/www/html/wp-content/themes
+      - ./.htaccess:/var/www/html/.htaccess
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecurepwd
+    ports:
+      - '3306:3306'
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  wordpress: {}
+  db-data: {}
